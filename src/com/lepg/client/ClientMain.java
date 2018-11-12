@@ -44,7 +44,13 @@ public class ClientMain {
         loop();  //Toda la transmisión está aquí
         
         out.writeObject("-1");  //Le avisa al servidor que el cliente se va a desconectar
-        Thread.sleep(1000);
+        
+        in.close();
+        out.close();
+        socket.close();
+        s.close();
+        s2.close();
+        
         System.exit(0);
     }
     
@@ -52,6 +58,8 @@ public class ClientMain {
         try {
             System.out.println("Conectando");
             socket = new Socket("localhost", 2000);
+            out = new ObjectOutputStream(socket.getOutputStream());  //Por qué si lo pongo al revés no sirve a a a a a  a 
+            in = new ObjectInputStream(socket.getInputStream());
             System.out.println("Conexión exitosa");
             return true;
         } catch (Exception e) {

@@ -28,8 +28,8 @@ public class ServerMain {
             socket = ss.accept();  //Recibe al cliente
             System.out.println("El cliente se ha conectado con la siguiente dirección: " + socket.getInetAddress());
             
-            in = new ObjectInputStream( socket.getInputStream());
-            out = new ObjectOutputStream( socket.getOutputStream());
+            in = new ObjectInputStream(socket.getInputStream());
+            out = new ObjectOutputStream(socket.getOutputStream());
             
             try {
                 loop();  //Loop donde se escucha al usuario hasta que este decide salir
@@ -37,7 +37,10 @@ public class ServerMain {
                 System.out.println("Error de transmisión");
                 e.printStackTrace();
             } finally {
-                
+                socket.close();
+                in.close();
+                out.close();
+                ss.close();
             }
             
         } catch (Exception e) {
