@@ -54,11 +54,11 @@ public class ServerMain {
             if (userInput.equals("-1"))
                 break;
             else
-                listenClient();
+                respondClient();
         }
     }
     
-    private static void listenClient() {
+    private static void respondClient() {
         
     }
     

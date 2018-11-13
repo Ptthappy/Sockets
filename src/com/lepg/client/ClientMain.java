@@ -89,6 +89,11 @@ public class ClientMain {
     private static void speakToServer() throws IOException {
         out.writeObject(userInput);
         System.out.println("Solicitud enviada");
+        listenToServer();
+    }
+    
+    private static void listenToServer() {
+        
     }
     
 }
