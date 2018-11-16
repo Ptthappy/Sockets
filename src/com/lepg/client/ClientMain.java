@@ -16,7 +16,7 @@ public class ClientMain {
     private static Scanner s = new Scanner(System.in); //Scanner para primitivos
     private static Scanner s2 = new Scanner(System.in); //Scanner para el input
     private static DataInputStream in = null;
-    private static DataOutputStream out = null;
+    private static ObjectOutputStream out = null;
     private static String userInput = null;
     
     public static void main(String[] args) throws IOException, InterruptedException  {
@@ -41,6 +41,8 @@ public class ClientMain {
         
         loop();  //Toda la transmisión está aquí
         
+        out.writeObject("-1");
+        
         if (out != null) out.close();
         if (in != null) in.close();
         if (socket != null) socket.close();
@@ -53,8 +55,9 @@ public class ClientMain {
     private static boolean connectToServer() {
         try {
             System.out.println("Conectando");
+            File file = new File ("test.txt");
             socket = new Socket("localhost", 2000);
-            out = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
+            out = new ObjectOutputStream(socket.getOutputStream());
             in = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
             System.out.println("Conexión exitosa");
             return true;
@@ -64,11 +67,11 @@ public class ClientMain {
         }
     }
     
-    private static void loop() {
+    private static void loop() throws IOException {
         while (true) {
             System.out.println("Ingresar la dirección y el archivo a enviar. Ingrese una línea vacía para salir");
-            //Desktop/Test/TestFile.exe Por ejemplo
             userInput = s2.nextLine();
+            //Desktop/Test/TestFile.exe Por ejemplo
             if (userInput.equals(""))
                 break;
             else {
@@ -83,13 +86,7 @@ public class ClientMain {
     }
     
     private static void speakToServer() throws IOException {
-        System.out.println(userInput);
-        byte[] data = new byte[1024];//userInput.getBytes();
-        int x;
-        while((x = in.read(data)) > 0) {
-            System.out.println("lel");
-            out.write(data, 0, x);
-        }
+        out.writeObject(userInput);
         System.out.println("Solicitud enviada");
         listenToServer();
     }

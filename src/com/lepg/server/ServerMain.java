@@ -15,7 +15,7 @@ import java.net.ServerSocket;
 public class ServerMain {
     private static Socket socket = null;
     private static ServerSocket ss = null;
-    private static DataInputStream in = null;
+    private static ObjectInputStream in = null;
     private static DataOutputStream out = null;
     
     public static void main(String[] args) throws IOException {
@@ -27,7 +27,7 @@ public class ServerMain {
             System.out.println("El cliente se ha conectado con la siguiente dirección: " + socket.getInetAddress());
             
             out = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
-            in = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+            in = new ObjectInputStream(socket.getInputStream());
             
             try {
                 loop();  //Loop donde se escucha al usuario hasta que este decide salir
@@ -39,6 +39,7 @@ public class ServerMain {
                 in.close();
                 out.close();
                 ss.close();
+                System.exit(0);
             }
             
         } catch (Exception e) {
@@ -49,21 +50,20 @@ public class ServerMain {
     private static void loop() throws IOException, ClassNotFoundException {
         while (true) {
             System.out.println("ekisde");
-            Integer culo = in.read();
-            String userInput = culo.toString();
+            String userInput = (String)in.readObject();
             System.out.println(userInput);
             if (userInput.equals("-1")) {
                 System.out.println("izi pisi tu gfa en visi");
                 break;
             }
             else {
-                respondClient();
+                respondClient(userInput);
             }
         }
     }
     
-    private static void respondClient() {
-        System.out.println("XDDDDDDDDDDD");
+    private static void respondClient(String input) {
+        System.out.println("Se recibió " + input);
     }
     
 }
