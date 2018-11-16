@@ -17,6 +17,7 @@ public class ClientMain {
     private static Scanner s2 = new Scanner(System.in); //Scanner para el input
     private static DataInputStream in = null;
     private static ObjectOutputStream out = null;
+    private static FileOutputStream fout = null;
     private static String userInput = null;
     
     public static void main(String[] args) throws IOException, InterruptedException  {
@@ -55,10 +56,12 @@ public class ClientMain {
     private static boolean connectToServer() {
         try {
             System.out.println("Conectando");
-            File file = new File ("test.txt");
+            File file = new File ("test\\culis.txt");
+            file.createNewFile();
             socket = new Socket("localhost", 2000);
             out = new ObjectOutputStream(socket.getOutputStream());
             in = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+            fout = new FileOutputStream(file);
             System.out.println("Conexión exitosa");
             return true;
         } catch (Exception e) {
@@ -91,8 +94,12 @@ public class ClientMain {
         listenToServer();
     }
     
-    private static void listenToServer() {
-        
+    private static void listenToServer() throws IOException {
+        byte[] data = new byte[1024 * 16];
+        int count;
+        while((count = in.read(data)) > 0) {
+            fout.write(data, 0, count);
+        }
     }
     
 }

@@ -17,6 +17,8 @@ public class ServerMain {
     private static ServerSocket ss = null;
     private static ObjectInputStream in = null;
     private static DataOutputStream out = null;
+    private static FileInputStream fin = null;
+    private static File file = null;
     
     public static void main(String[] args) throws IOException {
         ss = new ServerSocket(2000);
@@ -26,8 +28,11 @@ public class ServerMain {
             socket = ss.accept();  //Recibe al cliente
             System.out.println("El cliente se ha conectado con la siguiente dirección: " + socket.getInetAddress());
             
+            file = new File("CULOXD.txt");
+            file.createNewFile();
             out = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
             in = new ObjectInputStream(socket.getInputStream());
+            fin = new FileInputStream(file);
             
             try {
                 loop();  //Loop donde se escucha al usuario hasta que este decide salir
@@ -49,11 +54,10 @@ public class ServerMain {
     
     private static void loop() throws IOException, ClassNotFoundException {
         while (true) {
-            System.out.println("ekisde");
             String userInput = (String)in.readObject();
             System.out.println(userInput);
             if (userInput.equals("-1")) {
-                System.out.println("izi pisi tu gfa en visi");
+                System.out.println("El cliente se ha desconectado");
                 break;
             }
             else {
@@ -62,8 +66,13 @@ public class ServerMain {
         }
     }
     
-    private static void respondClient(String input) {
+    private static void respondClient(String input) throws IOException {
+        int x;
+        byte[] data = new byte[1024];
         System.out.println("Se recibió " + input);
+        while((x = fin.read(data)) > 0) {
+            out.write(data, 0, x);
+        }
     }
     
 }
