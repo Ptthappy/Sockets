@@ -2,9 +2,7 @@ package com.lepg.client;
 
 
 import java.net.Socket;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.Scanner;
 
 /**
@@ -17,8 +15,8 @@ public class ClientMain {
     private static Socket socket = null;
     private static Scanner s = new Scanner(System.in); //Scanner para primitivos
     private static Scanner s2 = new Scanner(System.in); //Scanner para el input
-    private static ObjectInputStream in = null;
-    private static ObjectOutputStream out = null;
+    private static DataInputStream in = null;
+    private static DataOutputStream out = null;
     private static String userInput = null;
     
     public static void main(String[] args) throws IOException, InterruptedException  {
@@ -35,7 +33,7 @@ public class ClientMain {
                 System.exit(0);
                 
             default:
-                System.err.println("Entráda inválida");
+                System.err.println("Entrada inválida");
             }
             if (connected)
                 break;
@@ -43,13 +41,11 @@ public class ClientMain {
         
         loop();  //Toda la transmisión está aquí
         
-        out.writeObject("-1");  //Le avisa al servidor que el cliente se va a desconectar
-        
-        in.close();
-        out.close();
-        socket.close();
-        s.close();
-        s2.close();
+        if (out != null) out.close();
+        if (in != null) in.close();
+        if (socket != null) socket.close();
+        if (s != null) s.close();
+        if (s2 != null) s2.close();
         
         System.exit(0);
     }
@@ -58,8 +54,8 @@ public class ClientMain {
         try {
             System.out.println("Conectando");
             socket = new Socket("localhost", 2000);
-            out = new ObjectOutputStream(socket.getOutputStream());  //Por qué si lo pongo al revés no sirve a a a a a  a 
-            in = new ObjectInputStream(socket.getInputStream());
+            out = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
+            in = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
             System.out.println("Conexión exitosa");
             return true;
         } catch (Exception e) {
@@ -87,7 +83,13 @@ public class ClientMain {
     }
     
     private static void speakToServer() throws IOException {
-        out.writeObject(userInput);
+        System.out.println(userInput);
+        byte[] data = new byte[1024];//userInput.getBytes();
+        int x;
+        while((x = in.read(data)) > 0) {
+            System.out.println("lel");
+            out.write(data, 0, x);
+        }
         System.out.println("Solicitud enviada");
         listenToServer();
     }

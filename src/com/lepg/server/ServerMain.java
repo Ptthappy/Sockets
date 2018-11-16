@@ -1,10 +1,8 @@
 package com.lepg.server;
 
 
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 
 
@@ -17,8 +15,8 @@ import java.net.ServerSocket;
 public class ServerMain {
     private static Socket socket = null;
     private static ServerSocket ss = null;
-    private static ObjectInputStream in = null;
-    private static ObjectOutputStream out = null;
+    private static DataInputStream in = null;
+    private static DataOutputStream out = null;
     
     public static void main(String[] args) throws IOException {
         ss = new ServerSocket(2000);
@@ -28,8 +26,8 @@ public class ServerMain {
             socket = ss.accept();  //Recibe al cliente
             System.out.println("El cliente se ha conectado con la siguiente dirección: " + socket.getInetAddress());
             
-            in = new ObjectInputStream(socket.getInputStream());
-            out = new ObjectOutputStream(socket.getOutputStream());
+            out = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
+            in = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
             
             try {
                 loop();  //Loop donde se escucha al usuario hasta que este decide salir
@@ -50,16 +48,22 @@ public class ServerMain {
     
     private static void loop() throws IOException, ClassNotFoundException {
         while (true) {
-            String userInput = (String)(in.readObject());
-            if (userInput.equals("-1"))
+            System.out.println("ekisde");
+            Integer culo = in.read();
+            String userInput = culo.toString();
+            System.out.println(userInput);
+            if (userInput.equals("-1")) {
+                System.out.println("izi pisi tu gfa en visi");
                 break;
-            else
+            }
+            else {
                 respondClient();
+            }
         }
     }
     
     private static void respondClient() {
-        
+        System.out.println("XDDDDDDDDDDD");
     }
     
 }
