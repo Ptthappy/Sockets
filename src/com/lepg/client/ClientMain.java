@@ -19,6 +19,10 @@ public class ClientMain {
     private static ObjectOutputStream out = null;
     private static FileOutputStream fout = null;
     private static String userInput = null;
+    private static File file = null;
+    
+    private static final String finalPath = "C:\\\\Users\\Ptthappy\\Downloads\\";
+    private static final String path = "C:\\\\Users\\Ptthappy\\";
     
     public static void main(String[] args) throws IOException, InterruptedException  {
         System.out.println("1. Conectarse al servidor\n2. Salir");
@@ -56,12 +60,9 @@ public class ClientMain {
     private static boolean connectToServer() {
         try {
             System.out.println("Conectando");
-            File file = new File ("test\\culis.txt");
-            file.createNewFile();
             socket = new Socket("localhost", 2000);
             out = new ObjectOutputStream(socket.getOutputStream());
             in = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
-            fout = new FileOutputStream(file);
             System.out.println("Conexión exitosa");
             return true;
         } catch (Exception e) {
@@ -90,15 +91,25 @@ public class ClientMain {
     
     private static void speakToServer() throws IOException {
         out.writeObject(userInput);
-        System.out.println("Solicitud enviada");
+        System.out.println("Solicitud enviada. Esperando respuesta");
         listenToServer();
+        System.out.println("Transmisión completa");
     }
     
     private static void listenToServer() throws IOException {
-        byte[] data = new byte[1024 * 16];
-        int count;
-        while((count = in.read(data)) > 0) {
-            fout.write(data, 0, count);
+        String to;
+        if (userInput.lastIndexOf('/') != -1)
+            to = userInput.substring(userInput.lastIndexOf('/'));
+        else if (userInput.lastIndexOf('\\') != -1)
+            to = userInput.substring(userInput.lastIndexOf('\\'));
+        else
+            to = userInput;
+        file = new File(finalPath, to);
+        file.createNewFile();
+        fout = new FileOutputStream(file);
+        int x;
+        while((x = in.read()) > 0) {
+            fout.write(x);
         }
     }
     

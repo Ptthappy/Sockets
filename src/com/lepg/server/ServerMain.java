@@ -20,6 +20,8 @@ public class ServerMain {
     private static FileInputStream fin = null;
     private static File file = null;
     
+    private static final String path = "C:\\\\Users\\Ptthappy\\";
+    
     public static void main(String[] args) throws IOException {
         ss = new ServerSocket(2000);
         
@@ -28,11 +30,8 @@ public class ServerMain {
             socket = ss.accept();  //Recibe al cliente
             System.out.println("El cliente se ha conectado con la siguiente dirección: " + socket.getInetAddress());
             
-            file = new File("CULOXD.txt");
-            file.createNewFile();
             out = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
             in = new ObjectInputStream(socket.getInputStream());
-            fin = new FileInputStream(file);
             
             try {
                 loop();  //Loop donde se escucha al usuario hasta que este decide salir
@@ -66,13 +65,19 @@ public class ServerMain {
         }
     }
     
-    private static void respondClient(String input) throws IOException {
-        int x;
-        byte[] data = new byte[1024];
+    private static void respondClient(String input) throws IOException, FileNotFoundException {
+        file = new File(path + input);
+        fin = new FileInputStream(file);
         System.out.println("Se recibió " + input);
-        while((x = fin.read(data)) > 0) {
-            out.write(data, 0, x);
+        if (file.exists()) {
+            int x;
+            while ((x = fin.read()) > 0) {
+                System.out.println("CUANDO B");
+                out.write(x);
+            }
         }
+        else
+            throw new FileNotFoundException();
     }
     
 }
