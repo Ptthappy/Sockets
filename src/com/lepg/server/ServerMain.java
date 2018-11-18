@@ -53,6 +53,7 @@ public class ServerMain {
     
     private static void loop() throws IOException, ClassNotFoundException {
         while (true) {
+            System.out.println("Esperando petición");
             String userInput = (String)in.readObject();
             System.out.println(userInput);
             if (userInput.equals("-1")) {
@@ -72,7 +73,7 @@ public class ServerMain {
         if (file.exists()) {
             int x;
             while ((x = fin.read()) > 0) {
-                System.out.println("CUANDO B");
+                System.out.println(x);
                 out.write(x);
             }
         }

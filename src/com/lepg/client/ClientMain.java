@@ -111,6 +111,7 @@ public class ClientMain {
         while((x = in.read()) > 0) {
             fout.write(x);
         }
+        System.out.println("Done");
     }
     
 }
