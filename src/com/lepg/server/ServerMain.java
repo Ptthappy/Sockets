@@ -16,7 +16,7 @@ public class ServerMain {
     private static Socket socket = null;
     private static ServerSocket ss = null;
     private static ObjectInputStream in = null;
-    private static DataOutputStream out = null;
+    private static OutputStream out = null;
     private static FileInputStream fin = null;
     private static File file = null;
     
@@ -30,7 +30,7 @@ public class ServerMain {
             socket = ss.accept();  //Recibe al cliente
             System.out.println("El cliente se ha conectado con la siguiente dirección: " + socket.getInetAddress());
             
-            out = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
+            out = socket.getOutputStream();
             in = new ObjectInputStream(socket.getInputStream());
             
             try {
@@ -72,7 +72,7 @@ public class ServerMain {
         System.out.println("Se recibió " + input);
         if (file.exists()) {
             int x;
-            while ((x = fin.read()) > 0) {
+            while ((x = fin.read()) != -1) {
                 System.out.println(x);
                 out.write(x);
             }

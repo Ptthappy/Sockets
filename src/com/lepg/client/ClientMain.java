@@ -15,7 +15,7 @@ public class ClientMain {
     private static Socket socket = null;
     private static Scanner s = new Scanner(System.in); //Scanner para primitivos
     private static Scanner s2 = new Scanner(System.in); //Scanner para el input
-    private static DataInputStream in = null;
+    private static InputStream in = null;
     private static ObjectOutputStream out = null;
     private static FileOutputStream fout = null;
     private static String userInput = null;
@@ -62,7 +62,7 @@ public class ClientMain {
             System.out.println("Conectando");
             socket = new Socket("localhost", 2000);
             out = new ObjectOutputStream(socket.getOutputStream());
-            in = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+            in = socket.getInputStream();
             System.out.println("Conexión exitosa");
             return true;
         } catch (Exception e) {
@@ -108,7 +108,7 @@ public class ClientMain {
         file.createNewFile();
         fout = new FileOutputStream(file);
         int x;
-        while((x = in.read()) > 0) {
+        while((x = in.read()) != -1) {
             fout.write(x);
         }
         System.out.println("Done");
