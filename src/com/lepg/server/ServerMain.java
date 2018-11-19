@@ -43,6 +43,7 @@ public class ServerMain {
                 in.close();
                 out.close();
                 ss.close();
+                fin.close();
                 System.exit(0);
             }
             
@@ -73,7 +74,6 @@ public class ServerMain {
         if (file.exists()) {
             int x;
             while ((x = fin.read()) != -1) {
-                System.out.println(x);
                 out.write(x);
             }
             out.write(85);

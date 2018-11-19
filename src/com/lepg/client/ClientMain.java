@@ -52,11 +52,14 @@ public class ClientMain {
         
         out.writeObject("-1");
         
-        if (out != null) out.close();
-        if (in != null) in.close();
-        if (socket != null) socket.close();
-        if (s != null) s.close();
-        if (s2 != null) s2.close();
+        s.close();
+        s2.close();
+        in.close();
+        out.close();
+        fout.close();
+        socket.close();
+        s.close();
+        s2.close();
         
         System.exit(0);
     }
@@ -120,7 +123,6 @@ public class ClientMain {
             buffer1 = buffer0;
             buffer0 = (byte)x;
         }
-        System.out.println("Done");
     }
     
 }
