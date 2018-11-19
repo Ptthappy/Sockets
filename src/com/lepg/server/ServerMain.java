@@ -69,10 +69,10 @@ public class ServerMain {
     
     private static void respondClient(String input) throws IOException, FileNotFoundException {
         file = new File(path + input);
-        fin = new FileInputStream(file);
-        System.out.println("Se recibió " + input);
         if (file.exists()) {
             int x;
+            fin = new FileInputStream(file);
+            System.out.println("Se recibió " + input);
             while ((x = fin.read()) != -1) {
                 out.write(x);
             }
@@ -81,8 +81,12 @@ public class ServerMain {
             out.write(85);
             out.write(85);
         }
-        else
-            throw new FileNotFoundException();
+        else {
+            out.write(85);
+            out.write(85);
+            out.write(85);
+            out.write(85);
+        }
     }
     
 }
