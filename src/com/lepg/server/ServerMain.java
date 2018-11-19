@@ -76,6 +76,10 @@ public class ServerMain {
                 System.out.println(x);
                 out.write(x);
             }
+            out.write(85);
+            out.write(85);
+            out.write(85);
+            out.write(85);
         }
         else
             throw new FileNotFoundException();

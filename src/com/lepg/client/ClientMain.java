@@ -24,6 +24,10 @@ public class ClientMain {
     private static final String finalPath = "C:\\\\Users\\Ptthappy\\Downloads\\";
     private static final String path = "C:\\\\Users\\Ptthappy\\";
     
+    private static byte buffer0 = 0;
+    private static byte buffer1 = 0;
+    private static byte buffer2 = 0;
+    
     public static void main(String[] args) throws IOException, InterruptedException  {
         System.out.println("1. Conectarse al servidor\n2. Salir");
         
@@ -109,7 +113,12 @@ public class ClientMain {
         fout = new FileOutputStream(file);
         int x;
         while((x = in.read()) != -1) {
+            if (buffer0 == buffer1 && buffer1 == buffer2 && x == 85)
+                break;
             fout.write(x);
+            buffer2 = buffer1;
+            buffer1 = buffer0;
+            buffer0 = (byte)x;
         }
         System.out.println("Done");
     }
