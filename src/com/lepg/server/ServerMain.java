@@ -76,16 +76,14 @@ public class ServerMain {
             while ((x = fin.read()) != -1) {
                 out.write(x);
             }
-            out.write(85);
-            out.write(85);
-            out.write(85);
-            out.write(85);
+            for (int i = 0; i < 32; i++) {
+                out.write(85);
+            }
         }
         else {
-            out.write(85);
-            out.write(85);
-            out.write(85);
-            out.write(85);
+            for (int i = 0; i < 32; i++) {
+                out.write(85);
+            }
         }
     }
     

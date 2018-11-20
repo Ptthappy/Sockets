@@ -3,6 +3,7 @@ package com.lepg.client;
 
 import java.net.Socket;
 import java.io.*;
+import java.net.InetAddress;
 import java.util.Scanner;
 
 /**
@@ -24,9 +25,7 @@ public class ClientMain {
     private static final String finalPath = "C:\\\\Users\\Ptthappy\\Downloads\\";
     private static final String path = "C:\\\\Users\\Ptthappy\\";
     
-    private static byte buffer0 = 0;
-    private static byte buffer1 = 0;
-    private static byte buffer2 = 0;
+    private static byte[] buffer = new byte[32];
     
     public static void main(String[] args) throws IOException, InterruptedException  {
         System.out.println("1. Conectarse al servidor\n2. Salir");
@@ -114,15 +113,32 @@ public class ClientMain {
         file = new File(finalPath, to);
         file.createNewFile();
         fout = new FileOutputStream(file);
-        int x;
+        int x, y = 0;
+        byte[] data = new byte[1024 * 100000];
         while((x = in.read()) != -1) {
-            if (buffer0 == buffer1 && buffer1 == buffer2 && x == 85)
+            if (checkBuffers(x))
                 break;
-            fout.write(x);
-            buffer2 = buffer1;
-            buffer1 = buffer0;
-            buffer0 = (byte)x;
+            
+            data[y] = (byte)x;
+            y++;
         }
+        for (int i = 0; i < y - 31; i++) {
+            fout.write(data[i]);
+        }
+    }
+    
+    private static boolean checkBuffers(int next) {
+        
+        for (int i = 31; i > 0; i--) {
+            buffer[i] = buffer[i - 1];
+        }
+        buffer[0] = (byte)next;
+        
+        for (int i = 0; i < 32; i++) {
+            if(buffer[i] != 85)
+                return false;
+        }
+        return true;
     }
     
 }
